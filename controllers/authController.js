@@ -1,5 +1,5 @@
 import { User } from "../models/User.js";
-import mongoose from "mongoose";
+import { DB_VALIDATION_ERROR } from "../errors.js";
 import bcrypt from "bcryptjs";
 import { createJWT } from "../middleware/auth.js";
 
@@ -9,9 +9,13 @@ export const register = async (req, res) => {
     // get data from request
     const { name, email, phone, password } = req.body;
     // check if user with email already exists
-    const exists = await User.findOne({ email });
+    let exists = await User.findOne({ email });
     if (exists) {
       return res.status(400).json({ message: "Email is taken" });
+    }
+    exists = await User.findOne({ phone });
+    if (exists) {
+      return res.status(400).json({ message: "Phone is taken" });
     }
     const newUser = new User();
     newUser.name = name;
@@ -20,12 +24,14 @@ export const register = async (req, res) => {
     newUser.password = password;
 
     await newUser.validate();
-    newUser.save();
+    await newUser.save();
 
-    return res.status(201).json({ message: "Account created" });
+    return res
+      .status(201)
+      .json({ message: "Account created", user: newUser.id });
   } catch (error) {
-    if (error instanceof mongoose.Error.ValidationError) {
-      console.log("VALIDATION ERRORS:", Object.keys(error.errors));
+    if (error instanceof DB_VALIDATION_ERROR) {
+      console.error("VALIDATION ERRORS:", Object.keys(error.errors));
     }
     return res.status(400).json({ message: "Registration failed" });
   }
@@ -52,7 +58,9 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "Authentication failed" });
     }
 
-    return res.status(200).json({ message: "Authenticated", token });
+    return res
+      .status(200)
+      .json({ message: "Authenticated", token, user: user.id });
   } catch (error) {
     return res.status(400).json({ message: "Authentication failed" });
   }
