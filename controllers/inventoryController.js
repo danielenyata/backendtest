@@ -1,5 +1,5 @@
 import { Item } from "../models/Item.js";
-import { DB_VALIDATION_ERROR } from "../errors.js";
+import { DB_VALIDATION_ERROR } from "../util/errors.js";
 import { User } from "../models/User.js";
 
 // get all user items
@@ -25,12 +25,13 @@ export const addItem = async (req, res) => {
       return res.status(403).json({ message: "Invalid token" });
     }
     const { name, description } = req.body;
-    const newItem = new Item();
-    newItem.name = name;
-    newItem.description = description;
+    // create item with request data
+    const newItem = new Item({ name, description });
+    // assign user id as reference
     newItem.user_id = user.id;
-
+    //  schema validation
     await newItem.validate();
+
     await newItem.save();
 
     res.status(201).json({ message: "Item created", item: newItem.id });

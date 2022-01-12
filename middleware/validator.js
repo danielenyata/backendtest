@@ -1,4 +1,4 @@
-import { errorFormatter } from "../validators.js";
+import { errorFormatter } from "../util/validators.js";
 import { validationResult } from "express-validator";
 
 export const validateData = (validator) => {

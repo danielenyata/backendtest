@@ -6,7 +6,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo run tests",
-    "dev": "nodemon --inspect app.js",
+    "dev": "nodemon --inspect ./lib/server.js",
     "lint": "eslint . --ext .js",
     "lint-fix": "eslint . --fix  --ext .js",
     "prepare": "husky install"

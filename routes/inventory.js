@@ -2,7 +2,7 @@ import { Router } from "express";
 import { verifyToken } from "../middleware/auth.js";
 import { getInventory, addItem } from "../controllers/inventoryController.js";
 import { validateData } from "../middleware/validator.js";
-import { addItemValidator } from "../validators.js";
+import { addItemValidator } from "../util/validators.js";
 
 // ALL ROUTES ARE PROTECTED
 // actions require user to be authenticated

@@ -1,5 +1,5 @@
 import { User } from "../models/User.js";
-import { DB_VALIDATION_ERROR } from "../errors.js";
+import { DB_VALIDATION_ERROR } from "../util/errors.js";
 import bcrypt from "bcryptjs";
 import { createJWT } from "../middleware/auth.js";
 
@@ -9,21 +9,19 @@ export const register = async (req, res) => {
     // get data from request
     const { name, email, phone, password } = req.body;
     // check if user with email already exists
-    let exists = await User.findOne({ email });
+    let exists = await User.exists({ email });
     if (exists) {
       return res.status(400).json({ message: "Email is taken" });
     }
-    exists = await User.findOne({ phone });
+    exists = await User.exists({ phone });
     if (exists) {
       return res.status(400).json({ message: "Phone is taken" });
     }
-    const newUser = new User();
-    newUser.name = name;
-    newUser.email = email;
-    newUser.phone = phone;
-    newUser.password = password;
-
+    // create user with request data
+    const newUser = new User({ name, email, phone, password });
+    //  schema validation
     await newUser.validate();
+
     await newUser.save();
 
     return res
