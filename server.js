@@ -24,6 +24,10 @@ app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
 app.use('/item', inventoryRoutes);
 
+app.get('/', (req, res) => {
+    res.send("Enyata Academy Backend API");
+});
+
 const PORT = process.env.PORT || 3500;
 
 mongoose.connection.once('open', () => {
