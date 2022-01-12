@@ -31,8 +31,8 @@ export const verifyToken = (req, res, next) => {
 };
 
 // helpers
-export const createJWT = ({ identifier, name }) => {
-  return jwt.sign({ identifier, name }, process.env.TOKEN_SECRET, {
+export const createJWT = ({ email, name }) => {
+  return jwt.sign({ email, name }, process.env.TOKEN_SECRET, {
     expiresIn: "1h"
   });
 };

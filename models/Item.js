@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 export const itemSchema = new Schema({
-  name: String,
-  user_id: Schema.Types.ObjectId,
+  name: { type: String, required: true },
+  user_id: { type: Schema.Types.ObjectId, required: true },
   description: String,
   image: String
 });
