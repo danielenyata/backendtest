@@ -6,13 +6,13 @@ export const errorFormatter = ({ msg }) => {
 };
 
 // validator for registering user
-export const RegisterValidator = [
+export const registerValidator = [
   body("name")
     .notEmpty()
     .withMessage("Name is required")
     .bail()
     .trim()
-    .isAlphanumeric()
+    .isAlpha("en-US", { ignore: " " })
     .isLength({ min: 2 })
     .withMessage("Name is too short"),
   body("phone")
@@ -40,7 +40,7 @@ export const RegisterValidator = [
 ];
 
 // validator for login
-export const LoginValidator = [
+export const loginValidator = [
   body("email")
     .notEmpty()
     .withMessage("Email is required")
@@ -55,4 +55,19 @@ export const LoginValidator = [
     .bail()
     .isLength({ min: 8 })
     .withMessage("Enter password with at least 8 characters")
+];
+
+// add item validator
+export const addItemValidator = [
+  body("name")
+    .notEmpty()
+    .withMessage("Item name is required")
+    .bail()
+    .trim()
+    .isLength({ min: 4 })
+    .withMessage("Item name must be at least 4 characters"),
+  body("description")
+    .optional(true)
+    .isLength({ min: 4 })
+    .withMessage("Item description must be at least 4 characters")
 ];

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { RegisterValidator, LoginValidator } from "../validators.js";
+import { registerValidator, loginValidator } from "../validators.js";
 import { validateData } from "../middleware/validator.js";
 import { register, login } from "../controllers/authController.js";
 
@@ -8,7 +8,7 @@ import { register, login } from "../controllers/authController.js";
 export const authRouter = Router();
 
 // register/create new user
-authRouter.post("/register", validateData(RegisterValidator), register);
+authRouter.post("/register", validateData(registerValidator), register);
 
 // login user
-authRouter.post("/login", validateData(LoginValidator), login);
+authRouter.post("/login", validateData(loginValidator), login);
