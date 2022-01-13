@@ -1,12 +1,18 @@
 import { Router } from "express";
+import {
+  getUser,
+  getProfile,
+  getAllUsers,
+} from "../controllers/userController.js";
+import { verifyToken } from "../middleware/auth.js";
+import { idValidator } from "../util/validators.js";
 
 // PROTECTED
 // actions on the authenticated user
 export const userRouter = Router();
+userRouter.use(verifyToken);
 // get user details
-userRouter.get("/", (req, res) => {
-  res.send("get authenticated user");
-});
+userRouter.get("/", getProfile);
 // edit user details
 userRouter.patch("/", (req, res) => {
   res.send("edit user");
@@ -19,12 +25,10 @@ userRouter.delete("/", (req, res) => {
 // OPEN
 // actions on the any user
 export const usersRouter = Router();
+usersRouter.use(verifyToken);
+
 // get all users
-usersRouter.get("/", (req, res) => {
-  res.send("get all users");
-});
+usersRouter.get("/", getAllUsers);
 
 // get specific user
-usersRouter.get("/:id", (req, res) => {
-  res.send("get user" + req.params.id);
-});
+usersRouter.get("/:id", idValidator, getUser);
