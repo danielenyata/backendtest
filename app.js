@@ -6,10 +6,10 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 require("dotenv").config();
 const port = process.env.PORT || 8080;
-const {signUp, signIn} = require("./controllers/userControllers")
+const {signUp, signIn, getAllUsers, userInfo} = require("./controllers/userControllers")
 const {check} = require("express-validator")
 const {ValidateUser} = require("./middlewares/Validators")
-const {addItem, findItemByTitle, deleteItemByTitle, listItems} = require("./controllers/productcontroller")
+const {addItem, findItemByTitle, deleteItemByTitle, listItems, updateItem} = require("./controllers/productcontroller")
 
 
 //connecting to mongoose
@@ -35,7 +35,9 @@ app.post('/api/signIn', signIn)
 app.post("/addItem", addItem)
 app.get("/api/:title", findItemByTitle)
 app.delete("/api/delete/:title", deleteItemByTitle)
-
+app.patch("/api/update/:titles", updateItem)
+app.get("/userinfo/:user", userInfo)
+app.get("/allUsers", getAllUsers)
 app.get("/items", listItems )
 
 

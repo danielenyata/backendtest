@@ -61,4 +61,19 @@ const signIn = async (req, res)=>{
     })
 }
 
-module.exports ={signUp, signIn}
+const getAllUsers = async (req, res)=>{
+    const users = await User.find().then((result)=>{
+        res.json({allUSers:result})
+    }).catch((error)=>{
+        console.log(error)
+    })
+}
+
+const userInfo = async (req, res)=>{
+    const {user} = req.params
+    let info = await User.findOne({email:user})
+    if (info){
+        return res.json({info})
+    } return res.json({msg: `${user} does not exist in the Database`})
+}
+module.exports ={signUp, signIn, getAllUsers, userInfo}
