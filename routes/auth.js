@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { registerValidator, loginValidator } from "../util/validators.js";
-import { validateData } from "../middleware/validator.js";
+import { validateData, validateImage } from "../middleware/validator.js";
 import { register, login } from "../controllers/authController.js";
 
 // PROTECTED
@@ -8,7 +8,12 @@ import { register, login } from "../controllers/authController.js";
 export const authRouter = Router();
 
 // register/create new user
-authRouter.post("/register", validateData(registerValidator), register);
+authRouter.post(
+  "/register",
+  validateImage,
+  validateData(registerValidator),
+  register
+);
 
 // login user
 authRouter.post("/login", validateData(loginValidator), login);
