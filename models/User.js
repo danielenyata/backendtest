@@ -7,7 +7,8 @@ const userSchema = new Schema({
   email: { type: String, unique: true, required: true },
   phone: { type: String, unique: true },
   image: String,
-  password: { type: String, required: true }
+  isAdmin: { type: Boolean, default: false, immutable: true },
+  password: { type: String, required: true },
 });
 
 // HOOKS

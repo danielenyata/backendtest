@@ -12,6 +12,7 @@
   "rules": {
     "quotes": ["warn", "double"],
     "semi": ["warn", "always"],
-    "comma-dangle": "off"
+    "comma-dangle": "off",
+    "space-before-function-paren": "off"
   }
 }

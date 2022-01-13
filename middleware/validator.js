@@ -1,7 +1,8 @@
 import { errorFormatter } from "../util/validators.js";
 import { validationResult } from "express-validator";
+import { removeUpload } from "../util/helpers.js";
 import multer from "multer";
-import fs from "fs";
+import { CustomError } from "../util/errors.js";
 
 // middleware for request data validation
 export const validateData = (validator) => {
@@ -9,26 +10,34 @@ export const validateData = (validator) => {
     await Promise.all(validator.map((validation) => validation.run(req)));
     const errors = validationResult(req).formatWith(errorFormatter);
     if (!errors.isEmpty()) {
-      if (req.file) {
-        fs.unlink(req.file.path, (err) => {
-          if (err) console.log("error deleting");
-          else console.log("deleted");
-        });
-      }
+      removeUpload(req.file);
       return res.status(400).json({ errors: errors.mapped() });
     }
     next();
   };
 };
 
-//  middleware for image validator
-export const validateImage = (req, res, next) => {
-  imageUploader(req, res, (err) => {
-    if (err && "code" in err) {
+//  middleware for avatar validator
+export const validateAvatar = (req, res, next) => {
+  const uploader = imageUploader("avatar");
+  uploader(req, res, (err) => {
+    if (err instanceof CustomError) {
       //   validation error
       return res.status(400).json({ message: err.message });
     } else if (err) {
       // An unknown error occurred when uploading.
+      return res.status(400).json({ message: "Image Upload error" });
+    }
+    next();
+  });
+};
+//  middleware for item image validator
+export const validateItemImage = (req, res, next) => {
+  const uploader = imageUploader("itemImage");
+  uploader(req, res, (err) => {
+    if (err instanceof CustomError) {
+      return res.status(400).json({ message: err.message });
+    } else if (err) {
       return res.status(400).json({ message: "Image Upload error" });
     }
     next();
@@ -55,16 +64,15 @@ const storage = multer.diskStorage({
 // image validator config
 const fileValidator = (req, file, cb) => {
   if (!ACCEPTED_MIMES.includes(file.mimetype)) {
-    const error = new Error();
-    error.message = "Image must be jpg, jpeg or png";
-    error.code = "CUSTOM";
-    return cb(error, false);
+    return cb(new CustomError("Image must be jpg, jpeg or png"), false);
   }
   cb(null, true);
 };
 
 // multer instance with configuration
-const imageUploader = multer({
-  storage,
-  fileFilter: fileValidator,
-}).single("avatar");
+const imageUploader = (fieldname) => {
+  return multer({
+    storage,
+    fileFilter: fileValidator,
+  }).single(fieldname);
+};

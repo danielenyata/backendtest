@@ -7,7 +7,7 @@ import {
   editItem,
   deleteItem,
 } from "../controllers/inventoryController.js";
-import { validateData } from "../middleware/validator.js";
+import { validateData, validateItemImage } from "../middleware/validator.js";
 import {
   addItemValidator,
   editItemValidator,
@@ -25,10 +25,20 @@ inventoryRouter.get("/", getInventory);
 inventoryRouter.get("/:id", validateData(idValidator), getItem);
 
 // create/add item
-inventoryRouter.post("/", validateData(addItemValidator), addItem);
+inventoryRouter.post(
+  "/",
+  validateItemImage,
+  validateData(addItemValidator),
+  addItem
+);
 
 // edit item
-inventoryRouter.patch("/:id", validateData(editItemValidator), editItem);
+inventoryRouter.patch(
+  "/:id",
+  validateItemImage,
+  validateData(editItemValidator),
+  editItem
+);
 
 // delete item
 inventoryRouter.delete("/:id", validateData(idValidator), deleteItem);
