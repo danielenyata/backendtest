@@ -1,7 +1,8 @@
 import { User } from "../models/User.js";
-import { DB_VALIDATION_ERROR } from "../util/errors.js";
+import { CustomError, handleError } from "../util/errors.js";
 import bcrypt from "bcryptjs";
 import { createJWT } from "../middleware/auth.js";
+import { removeUpload } from "../util/helpers.js";
 
 // register
 export const register = async (req, res) => {
@@ -9,16 +10,19 @@ export const register = async (req, res) => {
     // get data from request
     const { name, email, phone, password } = req.body;
     // check if user with email already exists
-    let exists = await User.exists({ email });
-    if (exists) {
-      return res.status(400).json({ message: "Email is taken" });
+    if (await User.exists({ email })) {
+      throw new CustomError("Email is taken");
     }
-    exists = await User.exists({ phone });
-    if (exists) {
-      return res.status(400).json({ message: "Phone is taken" });
+    // check if user with phone already exists
+    if (await User.exists({ phone })) {
+      throw new CustomError("Phone is taken");
     }
     // create user with request data
     const newUser = new User({ name, email, phone, password });
+    // assign image path
+    if (req.file) {
+      newUser.image = req.file.path;
+    }
     //  schema validation
     await newUser.validate();
 
@@ -28,14 +32,13 @@ export const register = async (req, res) => {
       .status(201)
       .json({ message: "Account created", user: newUser.id });
   } catch (error) {
-    if (error instanceof DB_VALIDATION_ERROR) {
-      console.error("VALIDATION ERRORS:", Object.keys(error.errors));
-    }
-    return res.status(400).json({ message: "Registration failed" });
+    removeUpload(req.file);
+    // handle errors
+    handleError(res, error, "Registration failed");
   }
 };
 
-// register
+// login
 export const login = async (req, res) => {
   try {
     // get data from request
@@ -43,23 +46,22 @@ export const login = async (req, res) => {
     // check if user with email already exists
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      throw new CustomError("Invalid credentials");
     }
 
-    const passMatch = await bcrypt.compare(password, user.password);
-    if (!passMatch) {
-      return res.status(400).json({ message: "Invalid credentials" });
+    // verify password
+    if (!(await bcrypt.compare(password, user.password))) {
+      throw new CustomError("Invalid credentials");
     }
 
     const token = createJWT({ email, name: user.name });
     if (!token) {
-      return res.status(400).json({ message: "Authentication failed" });
+      throw new CustomError("Could not authenticate");
     }
 
-    return res
-      .status(200)
-      .json({ message: "Authenticated", token, user: user.id });
+    return res.status(200).json({ message: "Authenticated", token });
   } catch (error) {
-    return res.status(400).json({ message: "Authentication failed" });
+    // handle errors
+    handleError(res, error, "Authentication failed");
   }
 };

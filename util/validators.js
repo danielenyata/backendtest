@@ -1,4 +1,4 @@
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 
 // format error info in a single sentence
 export const errorFormatter = ({ msg }) => {
@@ -36,7 +36,7 @@ export const registerValidator = [
     .withMessage("Password is required")
     .bail()
     .isLength({ min: 8 })
-    .withMessage("Enter password with at least 8 characters")
+    .withMessage("Enter password with at least 8 characters"),
 ];
 
 // validator for login
@@ -54,7 +54,7 @@ export const loginValidator = [
     .withMessage("Password is required")
     .bail()
     .isLength({ min: 8 })
-    .withMessage("Enter password with at least 8 characters")
+    .withMessage("Enter password with at least 8 characters"),
 ];
 
 // add item validator
@@ -69,5 +69,37 @@ export const addItemValidator = [
   body("description")
     .optional(true)
     .isLength({ min: 4 })
-    .withMessage("Item description must be at least 4 characters")
+    .withMessage("Item description must be at least 4 characters"),
+];
+// add item validator
+export const editItemValidator = [
+  param("id")
+    .notEmpty()
+    .withMessage("Item id required")
+    .trim()
+    .isAlphanumeric()
+    .withMessage("Invalid item id")
+    .isLength({ min: 24, max: 24 })
+    .withMessage("Invalid item id length"),
+  body("name")
+    .optional()
+    .trim()
+    .isLength({ min: 4 })
+    .withMessage("Item name must be at least 4 characters"),
+  body("description")
+    .optional(true)
+    .isLength({ min: 4 })
+    .withMessage("Item description must be at least 4 characters"),
+];
+
+// validator for object id
+export const idValidator = [
+  param("id")
+    .notEmpty()
+    .withMessage("Item id required")
+    .trim()
+    .isAlphanumeric()
+    .withMessage("Invalid item id")
+    .isLength({ min: 24, max: 24 })
+    .withMessage("Invalid item id length"),
 ];

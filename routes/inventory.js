@@ -1,8 +1,18 @@
 import { Router } from "express";
 import { verifyToken } from "../middleware/auth.js";
-import { getInventory, addItem } from "../controllers/inventoryController.js";
-import { validateData } from "../middleware/validator.js";
-import { addItemValidator } from "../util/validators.js";
+import {
+  getInventory,
+  getItem,
+  addItem,
+  editItem,
+  deleteItem,
+} from "../controllers/inventoryController.js";
+import { validateData, validateItemImage } from "../middleware/validator.js";
+import {
+  addItemValidator,
+  editItemValidator,
+  idValidator,
+} from "../util/validators.js";
 
 // ALL ROUTES ARE PROTECTED
 // actions require user to be authenticated
@@ -12,19 +22,23 @@ inventoryRouter.use(verifyToken);
 inventoryRouter.get("/", getInventory);
 
 // get specific item
-inventoryRouter.get("/:id", (req, res) => {
-  res.send("get item");
-});
+inventoryRouter.get("/:id", validateData(idValidator), getItem);
 
 // create/add item
-inventoryRouter.post("/", validateData(addItemValidator), addItem);
+inventoryRouter.post(
+  "/",
+  validateItemImage,
+  validateData(addItemValidator),
+  addItem
+);
 
 // edit item
-inventoryRouter.patch("/:id", verifyToken, (req, res) => {
-  res.send("edit item");
-});
+inventoryRouter.patch(
+  "/:id",
+  validateItemImage,
+  validateData(editItemValidator),
+  editItem
+);
 
 // delete item
-inventoryRouter.delete("/:id", verifyToken, (req, res) => {
-  res.send("delete item");
-});
+inventoryRouter.delete("/:id", validateData(idValidator), deleteItem);
