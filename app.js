@@ -35,7 +35,7 @@ app.post('/api/signIn', signIn)
 app.post("/addItem", addItem)
 app.get("/api/:title", findItemByTitle)
 app.delete("/api/delete/:title", deleteItemByTitle)
-app.get("/api/listItems")
+
 app.get("/items", listItems )
 
 
