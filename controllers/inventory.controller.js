@@ -7,6 +7,7 @@ async function createItem(req, res) {
 
     const newItem = new Inventory({
         ...item,
+        image: req.file.filename,
         creatorId: user.id,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
@@ -30,7 +31,7 @@ async function updateItem(req, res) {
 
     if (req.body?.name) item.name = req.body.name;
     if (req.body?.quantity) item.quantity = req.body.quantity;
-    if (req.body?.image) item.image = req.body.image;
+    if (req.file?.filename) item.image = req.file.filename;
     if (req.body?.description) item.description = req.body.description;
     item.updatedAt = new Date().toISOString();
 

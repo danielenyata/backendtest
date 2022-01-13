@@ -8,6 +8,8 @@ const connectDB = require('./config/dbConn');
 const authRoutes = require('./routes/auth.route');
 const userRoutes = require('./routes/user.route');
 const inventoryRoutes = require('./routes/inventory.route');
+const { verifyJwt } = require('./middleware/auth');
+
 
 const app = express();
 
@@ -21,8 +23,8 @@ app.use(cors());
 
 
 app.use('/auth', authRoutes);
-app.use('/user', userRoutes);
-app.use('/item', inventoryRoutes);
+app.use('/user', verifyJwt, userRoutes);
+app.use('/item', verifyJwt, inventoryRoutes);
 
 app.get('/', (req, res) => {
     res.send("Enyata Academy Backend API");

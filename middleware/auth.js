@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 
 require('dotenv').config();
 
-async function verifyJWT(req, res, next) {
+async function verifyJwt(req, res, next) {
     const authHeader = req.headers.authorization || req.header.Authorization;
 
     if (!authHeader?.startsWith('Bearer')) return res.sendStatus(401);
@@ -16,5 +16,5 @@ async function verifyJWT(req, res, next) {
 };
 
 module.exports = {
-    verifyJWT
+    verifyJwt
 };

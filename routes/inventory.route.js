@@ -1,13 +1,13 @@
 const express = require('express');
 const { createItem, updateItem, getAllItems, getItem, deleteItem } = require('../controllers/inventory.controller');
-const { verifyJWT } = require('../middleware/auth');
+const { upload } = require('../middleware/image.upload');
 
 const router = express.Router();
 
-router.get('/', verifyJWT, getAllItems);
-router.get('/:id', verifyJWT, getItem);
-router.post('/', verifyJWT, createItem);
-router.put('/', verifyJWT, updateItem);
-router.delete('/', verifyJWT, deleteItem);
+router.get('/', getAllItems);
+router.get('/:id', getItem);
+router.post('/', upload.single('image'), createItem);
+router.put('/', upload.single('image'), updateItem);
+router.delete('/', deleteItem);
 
 module.exports = router;
