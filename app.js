@@ -9,6 +9,7 @@ const port = process.env.PORT || 8080;
 const {signUp, signIn} = require("./controllers/userControllers")
 const {check} = require("express-validator")
 const {ValidateUser} = require("./middlewares/Validators")
+const {addItem, findItemByTitle, deleteItemByTitle, listItems} = require("./controllers/productcontroller")
 
 
 //connecting to mongoose
@@ -31,7 +32,11 @@ app.get('/', (req, res)=>{
 
 app.post('/api/signup', [...ValidateUser], signUp)
 app.post('/api/signIn', signIn)
-
+app.post("/addItem", addItem)
+app.get("/api/:title", findItemByTitle)
+app.delete("/api/delete/:title", deleteItemByTitle)
+app.get("/api/listItems")
+app.get("/items", listItems )
 
 
 
