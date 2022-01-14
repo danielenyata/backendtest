@@ -1,0 +1,55 @@
+{
+  "name": "backendtest",
+  "version": "1.0.0",
+  "description": "Inventory Manager",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "test": "jest --runInBand",
+    "start": "node ./lib/server.js",
+    "dev": "nodemon --inspect ./lib/server.js",
+    "lint": "eslint . --ext .js",
+    "lint-fix": "eslint . --fix  --ext .js",
+    "prepare": "husky install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/asteroid2k/backendtest.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/asteroid2k/backendtest/issues"
+  },
+  "homepage": "https://github.com/asteroid2k/backendtest#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^11.0.0",
+    "express": "^4.17.2",
+    "express-validator": "^6.14.0",
+    "helmet": "^5.0.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.1.6",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.4"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.16.7",
+    "@babel/preset-env": "^7.16.8",
+    "@types/jest": "^27.4.0",
+    "@types/supertest": "^2.0.11",
+    "babel-jest": "^27.4.6",
+    "eslint": "^7.32.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.2.0",
+    "husky": "^7.0.0",
+    "jest": "^27.4.7",
+    "prettier": "2.5.1",
+    "supertest": "^6.2.1"
+  },
+  "engines": {
+    "node": "16.x"
+  }
+}
