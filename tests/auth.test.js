@@ -2,15 +2,22 @@ import { createJWT } from "../middleware/auth.js";
 import mongoose from "mongoose";
 import request from "supertest";
 import app from "../lib/app.js";
+import { User } from "../models/User.js";
 
 const databaseName = "test-inventory";
 beforeAll(async () => {
   const url = `mongodb://127.0.0.1/${databaseName}`;
   await mongoose.connect(url);
+  await User.create({
+    name: "Free Guy",
+    email: "guy@free.com",
+    phone: "0000011111",
+    password: "password",
+  });
 });
-afterAll((done) => {
+afterAll(async () => {
+  await User.deleteMany();
   mongoose.connection.close();
-  done();
 });
 
 describe("test JWT creation", () => {
