@@ -67,7 +67,7 @@ async function deleteItem(req, res) {
 
     const item = await Inventory.findOne({ _id: req.body.id }).exec();
 
-    if (!item) return res.status(204).json({ message: `No item matches ID ${req.body.id}` });
+    // if (!item.length) return res.status(204).json({ message: `No item matches ID ${req.body.id}` });
 
     await Inventory.findByIdAndRemove(item._id);
     res.status(200).json({ message: 'item deleted' });

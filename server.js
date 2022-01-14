@@ -1,38 +1,25 @@
 const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
 const morgan = require('morgan');
-const connectDB = require('./config/dbConn');
-
 
 const authRoutes = require('./routes/auth.route');
 const userRoutes = require('./routes/user.route');
 const inventoryRoutes = require('./routes/inventory.route');
 const { verifyJwt } = require('./middleware/auth');
 
-
 const app = express();
 
-connectDB();
 
 
 app.use(morgan('dev'));
 app.use(express.json());
-
-app.use(cors());
 
 
 app.use('/auth', authRoutes);
 app.use('/user', verifyJwt, userRoutes);
 app.use('/item', verifyJwt, inventoryRoutes);
 
-app.get('/', (req, res) => {
-    res.send("Enyata Academy Backend API");
-});
 
-const PORT = process.env.PORT || 3500;
 
-mongoose.connection.once('open', () => {
-    console.log('Connection to MongoDB');
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-});
+module.exports =  app 
+
+
