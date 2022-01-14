@@ -37,7 +37,7 @@ const signIn = async (req, res)=>{
     const {email, password} = req.body;
 
     //check if password matches
-    let user = await User.findOne({where:{email:email}});
+    let user = await User.findOne({email:email});
     if(!user){
         return res.status(400).json({msg:"invalid Credentials"})
     }
